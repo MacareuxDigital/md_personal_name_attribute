@@ -1,0 +1,5 @@
+{
+    "require": {
+        "jsor/string-formatter": "^1.1"
+    }
+}
