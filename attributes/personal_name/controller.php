@@ -114,6 +114,12 @@ class Controller extends AttributeController
         return true;
     }
 
+    public function validateForm($data)
+    {
+        return isset($data['family_name']) && $data['family_name'] != ''
+            && isset($data['given_name']) && $data['given_name'] != '';
+    }
+
     public function getSearchIndexValue()
     {
         /** @var PersonalNameValue $v */
