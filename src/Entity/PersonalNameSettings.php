@@ -30,6 +30,18 @@ class PersonalNameSettings extends Settings
     protected $akGivenNameLabel = '';
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $akFamilyNamePattern = '';
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $akGivenNamePattern = '';
+
+    /**
      * @return string
      */
     public function getFirstName()
@@ -75,5 +87,37 @@ class PersonalNameSettings extends Settings
     public function setGivenNameLabel($akGivenNameLabel)
     {
         $this->akGivenNameLabel = $akGivenNameLabel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamilyNamePattern()
+    {
+        return $this->akFamilyNamePattern;
+    }
+
+    /**
+     * @param string $akFamilyNamePattern
+     */
+    public function setFamilyNamePattern($akFamilyNamePattern)
+    {
+        $this->akFamilyNamePattern = $akFamilyNamePattern;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGivenNamePattern()
+    {
+        return $this->akGivenNamePattern;
+    }
+
+    /**
+     * @param string $akGivenNamePattern
+     */
+    public function setGivenNamePattern($akGivenNamePattern)
+    {
+        $this->akGivenNamePattern = $akGivenNamePattern;
     }
 }

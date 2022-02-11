@@ -10,7 +10,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'md_personal_name_attribute';
     protected $appVersionRequired = '8.5.5';
-    protected $pkgVersion = '0.0.1';
+    protected $pkgVersion = '0.0.2';
     protected $pkgAutoloaderRegistries = [
         'src' => '\Macareux\Package\PersonalNameAttribute',
     ];

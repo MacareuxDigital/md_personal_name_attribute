@@ -8,6 +8,7 @@ use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
 use Concrete\Core\Error\ErrorList\ErrorList;
 use Concrete\Core\Form\Context\ContextInterface;
+use Concrete\Core\Utility\Service\Validation\Strings;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameSettings;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameValue;
 
@@ -30,6 +31,7 @@ class Controller extends AttributeController
      * @var string
      */
     protected $akFirstName;
+
     /**
      * @var string
      */
@@ -39,6 +41,16 @@ class Controller extends AttributeController
      * @var string
      */
     protected $akGivenNameLabel;
+
+    /**
+     * @var string
+     */
+    protected $akFamilyNamePattern;
+
+    /**
+     * @var string
+     */
+    protected $akGivenNamePattern;
 
     public function getIconFormatter()
     {
@@ -141,8 +153,12 @@ class Controller extends AttributeController
         $akFirstName = $data['akFirstName'];
         $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
+        $akFamilyNamePattern = $data['akFamilyNamePattern'];
+        $akGivenNamePattern = $data['akGivenNamePattern'];
 
         $e = $this->app->make('error');
+        /** @var Strings $strings */
+        $strings = $this->app->make(Strings::class);
 
         if (empty($akFirstName)) {
             $e->add(t('You must select first name field.'));
@@ -154,6 +170,14 @@ class Controller extends AttributeController
 
         if (empty($akGivenNameLabel)) {
             $e->add(t('You must specify a label for given name field.'));
+        }
+
+        if (!empty($akFamilyNamePattern) && !$strings->isValidRegex($akFamilyNamePattern, false)) {
+            $e->add(t('Invalid regex pattern.'));
+        }
+
+        if (!empty($akGivenNamePattern) && !$strings->isValidRegex($akGivenNamePattern, false)) {
+            $e->add(t('Invalid regex pattern.'));
         }
 
         return $e;
@@ -180,10 +204,14 @@ class Controller extends AttributeController
         $akFirstName = $data['akFirstName'];
         $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
+        $akFamilyNamePattern = $data['akFamilyNamePattern'];
+        $akGivenNamePattern = $data['akGivenNamePattern'];
 
         $type->setFirstName($akFirstName);
         $type->setFamilyNameLabel($akFamilyNameLabel);
         $type->setGivenNameLabel($akGivenNameLabel);
+        $type->setFamilyNamePattern($akFamilyNamePattern);
+        $type->setGivenNamePattern($akGivenNamePattern);
 
         return $type;
     }
@@ -278,8 +306,12 @@ class Controller extends AttributeController
         $this->akFirstName = $type->getFirstName();
         $this->akFamilyNameLabel = $type->getFamilyNameLabel();
         $this->akGivenNameLabel = $type->getGivenNameLabel();
+        $this->akFamilyNamePattern = $type->getFamilyNamePattern();
+        $this->akGivenNamePattern = $type->getGivenNamePattern();
         $this->set('akFirstName', $this->akFirstName);
         $this->set('akFamilyNameLabel', $this->akFamilyNameLabel);
         $this->set('akGivenNameLabel', $this->akGivenNameLabel);
+        $this->set('akFamilyNamePattern', $this->akFamilyNamePattern);
+        $this->set('akGivenNamePattern', $this->akGivenNamePattern);
     }
 }

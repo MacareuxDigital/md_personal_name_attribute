@@ -10,6 +10,8 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $akFamilyNameLabel = isset($akFamilyNameLabel) ? $akFamilyNameLabel : t('Family Name');
 $akGivenNameLabel = isset($akGivenNameLabel) ? $akGivenNameLabel : t('Given Name');
 $akFirstName = isset($akFirstName) ? $akFirstName : 'family_name';
+$akFamilyNamePattern = isset($akFamilyNamePattern) ? $akFamilyNamePattern : '';
+$akGivenNamePattern = isset($akGivenNamePattern) ? $akGivenNamePattern : '';
 ?>
 <fieldset class="ccm-attribute ccm-attribute-personal-name">
     <legend><?=t('Personal Name Options')?></legend>
@@ -27,7 +29,15 @@ $akFirstName = isset($akFirstName) ? $akFirstName : 'family_name';
         <?= $form->text('akFamilyNameLabel', $akFamilyNameLabel) ?>
     </div>
     <div class="form-group">
+        <?= $form->label('akFamilyNamePattern', t('Family Name Pattern')) ?>
+        <?= $form->text('akFamilyNamePattern', $akFamilyNamePattern, ['placeholder' => '[a-zA-Z]*']) ?>
+    </div>
+    <div class="form-group">
         <?= $form->label('akGivenNameLabel', t('Given Name Label')) ?>
         <?= $form->text('akGivenNameLabel', $akGivenNameLabel) ?>
+    </div>
+    <div class="form-group">
+        <?= $form->label('akGivenNamePattern', t('Given Name Pattern')) ?>
+        <?= $form->text('akGivenNamePattern', $akGivenNamePattern, ['placeholder' => '[a-zA-Z]*']) ?>
     </div>
 </fieldset>
