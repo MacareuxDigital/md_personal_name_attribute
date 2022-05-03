@@ -17,11 +17,11 @@ class Controller extends AttributeController
     public $helpers = ['form'];
 
     protected $searchIndexFieldDefinition = [
-        'family_name' => [
+        'given_name' => [
             'type' => 'string',
             'options' => ['length' => '255', 'default' => '', 'notnull' => false],
         ],
-        'given_name' => [
+        'family_name' => [
             'type' => 'string',
             'options' => ['length' => '255', 'default' => '', 'notnull' => false],
         ],
@@ -35,22 +35,22 @@ class Controller extends AttributeController
     /**
      * @var string
      */
-    protected $akFamilyNameLabel;
-
-    /**
-     * @var string
-     */
     protected $akGivenNameLabel;
 
     /**
      * @var string
      */
-    protected $akFamilyNamePattern;
+    protected $akFamilyNameLabel;
 
     /**
      * @var string
      */
     protected $akGivenNamePattern;
+
+    /**
+     * @var string
+     */
+    protected $akFamilyNamePattern;
 
     public function getIconFormatter()
     {
@@ -62,8 +62,8 @@ class Controller extends AttributeController
         $h = $this->attributeKey->getAttributeKeyHandle();
 
         return $queryBuilder->expr()->orX(
-            $queryBuilder->expr()->like("ak_{$h}_family_name", ':keywords'),
-            $queryBuilder->expr()->like("ak_{$h}_given_name", ':keywords')
+            $queryBuilder->expr()->like("ak_{$h}_given_name", ':keywords'),
+            $queryBuilder->expr()->like("ak_{$h}_family_name", ':keywords')
         );
     }
 
@@ -86,14 +86,14 @@ class Controller extends AttributeController
     {
         $akHandle = $this->attributeKey->getAttributeKeyHandle();
 
-        $family_name = $this->request('family_name');
-        if ($family_name) {
-            $list->filter('ak_' . $akHandle . '_family_name', '%' . $family_name . '%', 'like');
-        }
-
         $given_name = $this->request('given_name');
         if ($given_name) {
             $list->filter('ak_' . $akHandle . '_given_name', '%' . $given_name . '%', 'like');
+        }
+
+        $family_name = $this->request('family_name');
+        if ($family_name) {
+            $list->filter('ak_' . $akHandle . '_family_name', '%' . $family_name . '%', 'like');
         }
 
         return $list;
@@ -128,8 +128,8 @@ class Controller extends AttributeController
 
     public function validateForm($data)
     {
-        return isset($data['family_name']) && $data['family_name'] != ''
-            && isset($data['given_name']) && $data['given_name'] != '';
+        return isset($data['given_name']) && $data['given_name'] != ''
+            && isset($data['family_name']) && $data['family_name'] != '';
     }
 
     public function getSearchIndexValue()
@@ -138,8 +138,8 @@ class Controller extends AttributeController
         $v = $this->getAttributeValue()->getValue();
 
         return [
-            'family_name' => $v->getFamilyName(),
             'given_name' => $v->getGivenName(),
+            'family_name' => $v->getFamilyName(),
         ];
     }
 
@@ -161,10 +161,10 @@ class Controller extends AttributeController
     public function validateKey($data = false)
     {
         $akFirstName = $data['akFirstName'];
-        $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
-        $akFamilyNamePattern = $data['akFamilyNamePattern'];
         $akGivenNamePattern = $data['akGivenNamePattern'];
+        $akFamilyNameLabel = $data['akFamilyNameLabel'];
+        $akFamilyNamePattern = $data['akFamilyNamePattern'];
 
         $e = $this->app->make('error');
         /** @var Strings $strings */
@@ -174,19 +174,19 @@ class Controller extends AttributeController
             $e->add(t('You must select first name field.'));
         }
 
-        if (empty($akFamilyNameLabel)) {
-            $e->add(t('You must specify a label for family name field.'));
-        }
-
         if (empty($akGivenNameLabel)) {
             $e->add(t('You must specify a label for given name field.'));
         }
 
-        if (!empty($akFamilyNamePattern) && !$strings->isValidRegex($akFamilyNamePattern, false)) {
-            $e->add(t('Invalid regex pattern.'));
+        if (empty($akFamilyNameLabel)) {
+            $e->add(t('You must specify a label for family name field.'));
         }
 
         if (!empty($akGivenNamePattern) && !$strings->isValidRegex($akGivenNamePattern, false)) {
+            $e->add(t('Invalid regex pattern.'));
+        }
+
+        if (!empty($akFamilyNamePattern) && !$strings->isValidRegex($akFamilyNamePattern, false)) {
             $e->add(t('Invalid regex pattern.'));
         }
 
@@ -200,8 +200,8 @@ class Controller extends AttributeController
         }
         extract($data);
         $av = new PersonalNameValue();
-        $av->setFamilyName($family_name);
         $av->setGivenName($given_name);
+        $av->setFamilyName($family_name);
 
         return $av;
     }
@@ -212,16 +212,16 @@ class Controller extends AttributeController
         $type = $this->getAttributeKeySettings();
 
         $akFirstName = $data['akFirstName'];
-        $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
-        $akFamilyNamePattern = $data['akFamilyNamePattern'];
         $akGivenNamePattern = $data['akGivenNamePattern'];
+        $akFamilyNameLabel = $data['akFamilyNameLabel'];
+        $akFamilyNamePattern = $data['akFamilyNamePattern'];
 
         $type->setFirstName($akFirstName);
-        $type->setFamilyNameLabel($akFamilyNameLabel);
         $type->setGivenNameLabel($akGivenNameLabel);
-        $type->setFamilyNamePattern($akFamilyNamePattern);
         $type->setGivenNamePattern($akGivenNamePattern);
+        $type->setFamilyNameLabel($akFamilyNameLabel);
+        $type->setFamilyNamePattern($akFamilyNamePattern);
 
         return $type;
     }
@@ -239,8 +239,8 @@ class Controller extends AttributeController
             /** @var PersonalNameValue $value */
             $value = $this->getAttributeValue()->getValue();
             if ($value) {
-                $this->set('family_name', $value->getFamilyName());
                 $this->set('given_name', $value->getGivenName());
+                $this->set('family_name', $value->getFamilyName());
             }
         }
 
@@ -276,8 +276,8 @@ class Controller extends AttributeController
         $value = $this->getAttributeValueObject();
 
         return [
-            $value ? (string) $value->getFamilyName() : '',
             $value ? (string) $value->getGivenName() : '',
+            $value ? (string) $value->getFamilyName() : '',
         ];
     }
 
@@ -297,8 +297,8 @@ class Controller extends AttributeController
         }
         if ($value !== null) {
             /* @var PersonalNameValue $value */
-            $value->setFamilyName(trim(array_shift($textRepresentation)));
             $value->setGivenName(trim(array_shift($textRepresentation)));
+            $value->setFamilyName(trim(array_shift($textRepresentation)));
         }
 
         return $value;
@@ -314,14 +314,14 @@ class Controller extends AttributeController
         /** @var PersonalNameSettings $type */
         $type = $ak->getAttributeKeySettings();
         $this->akFirstName = $type->getFirstName();
-        $this->akFamilyNameLabel = $type->getFamilyNameLabel();
         $this->akGivenNameLabel = $type->getGivenNameLabel();
-        $this->akFamilyNamePattern = $type->getFamilyNamePattern();
         $this->akGivenNamePattern = $type->getGivenNamePattern();
+        $this->akFamilyNameLabel = $type->getFamilyNameLabel();
+        $this->akFamilyNamePattern = $type->getFamilyNamePattern();
         $this->set('akFirstName', $this->akFirstName);
-        $this->set('akFamilyNameLabel', $this->akFamilyNameLabel);
         $this->set('akGivenNameLabel', $this->akGivenNameLabel);
-        $this->set('akFamilyNamePattern', $this->akFamilyNamePattern);
         $this->set('akGivenNamePattern', $this->akGivenNamePattern);
+        $this->set('akFamilyNameLabel', $this->akFamilyNameLabel);
+        $this->set('akFamilyNamePattern', $this->akFamilyNamePattern);
     }
 }

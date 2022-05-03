@@ -16,13 +16,12 @@ $akGivenNamePattern = isset($akGivenNamePattern) ? $akGivenNamePattern : '';
 <fieldset class="ccm-attribute ccm-attribute-personal-name">
     <legend><?=t('Personal Name Options')?></legend>
     <div class="form-group">
-        <?= $form->label('', t('First Name')) ?>
-        <div class="radio">
-            <label><?= $form->radio('akFirstName', 'family_name', $akFirstName) ?><?= t('Family Name') ?></label>
-        </div>
-        <div class="radio">
-            <label><?= $form->radio('akFirstName', 'given_name', $akFirstName) ?><?= t('Given Name') ?></label>
-        </div>
+        <?= $form->label('akGivenNameLabel', t('Given Name Label')) ?>
+        <?= $form->text('akGivenNameLabel', $akGivenNameLabel) ?>
+    </div>
+    <div class="form-group">
+        <?= $form->label('akGivenNamePattern', t('Given Name Pattern')) ?>
+        <?= $form->text('akGivenNamePattern', $akGivenNamePattern, ['placeholder' => '[a-zA-Z]*']) ?>
     </div>
     <div class="form-group">
         <?= $form->label('akFamilyNameLabel', t('Family Name Label')) ?>
@@ -33,11 +32,12 @@ $akGivenNamePattern = isset($akGivenNamePattern) ? $akGivenNamePattern : '';
         <?= $form->text('akFamilyNamePattern', $akFamilyNamePattern, ['placeholder' => '[a-zA-Z]*']) ?>
     </div>
     <div class="form-group">
-        <?= $form->label('akGivenNameLabel', t('Given Name Label')) ?>
-        <?= $form->text('akGivenNameLabel', $akGivenNameLabel) ?>
-    </div>
-    <div class="form-group">
-        <?= $form->label('akGivenNamePattern', t('Given Name Pattern')) ?>
-        <?= $form->text('akGivenNamePattern', $akGivenNamePattern, ['placeholder' => '[a-zA-Z]*']) ?>
+        <?= $form->label('', t('Which field as First Name?')) ?>
+        <div class="radio">
+            <label><?= $form->radio('akFirstName', 'given_name', $akFirstName) ?><?= t('Given Name') ?></label>
+        </div>
+        <div class="radio">
+            <label><?= $form->radio('akFirstName', 'family_name', $akFirstName) ?><?= t('Family Name') ?></label>
+        </div>
     </div>
 </fieldset>

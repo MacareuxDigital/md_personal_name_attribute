@@ -21,25 +21,25 @@ class PersonalNameSettings extends Settings
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $akFamilyNameLabel = '';
-
-    /**
-     * @var string
-     * @ORM\Column(type="string")
-     */
     protected $akGivenNameLabel = '';
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $akFamilyNamePattern = '';
+    protected $akGivenNamePattern = '';
 
     /**
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $akGivenNamePattern = '';
+    protected $akFamilyNameLabel = '';
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $akFamilyNamePattern = '';
 
     /**
      * @return string
@@ -55,22 +55,6 @@ class PersonalNameSettings extends Settings
     public function setFirstName($akFirstName)
     {
         $this->akFirstName = $akFirstName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFamilyNameLabel()
-    {
-        return $this->akFamilyNameLabel;
-    }
-
-    /**
-     * @param string $akFamilyNameLabel
-     */
-    public function setFamilyNameLabel($akFamilyNameLabel)
-    {
-        $this->akFamilyNameLabel = $akFamilyNameLabel;
     }
 
     /**
@@ -92,22 +76,6 @@ class PersonalNameSettings extends Settings
     /**
      * @return string
      */
-    public function getFamilyNamePattern()
-    {
-        return $this->akFamilyNamePattern;
-    }
-
-    /**
-     * @param string $akFamilyNamePattern
-     */
-    public function setFamilyNamePattern($akFamilyNamePattern)
-    {
-        $this->akFamilyNamePattern = $akFamilyNamePattern;
-    }
-
-    /**
-     * @return string
-     */
     public function getGivenNamePattern()
     {
         return $this->akGivenNamePattern;
@@ -119,5 +87,37 @@ class PersonalNameSettings extends Settings
     public function setGivenNamePattern($akGivenNamePattern)
     {
         $this->akGivenNamePattern = $akGivenNamePattern;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamilyNameLabel()
+    {
+        return $this->akFamilyNameLabel;
+    }
+
+    /**
+     * @param string $akFamilyNameLabel
+     */
+    public function setFamilyNameLabel($akFamilyNameLabel)
+    {
+        $this->akFamilyNameLabel = $akFamilyNameLabel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamilyNamePattern()
+    {
+        return $this->akFamilyNamePattern;
+    }
+
+    /**
+     * @param string $akFamilyNamePattern
+     */
+    public function setFamilyNamePattern($akFamilyNamePattern)
+    {
+        $this->akFamilyNamePattern = $akFamilyNamePattern;
     }
 }
