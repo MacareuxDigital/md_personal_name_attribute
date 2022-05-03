@@ -10,7 +10,7 @@ class Controller extends Package
 {
     protected $pkgHandle = 'md_personal_name_attribute';
     protected $appVersionRequired = '8.5.5';
-    protected $pkgVersion = '0.9';
+    protected $pkgVersion = '0.9.1';
     protected $pkgAutoloaderRegistries = [
         'src' => '\Macareux\Package\PersonalNameAttribute',
     ];
@@ -27,10 +27,6 @@ class Controller extends Package
 
     public function install()
     {
-        if (!file_exists($this->getPackagePath() . '/vendor/autoload.php')) {
-            throw new \Exception(t('Required libraries not found.'));
-        }
-
         $pkg = parent::install();
 
         /** @var TypeFactory $factory */
@@ -43,15 +39,5 @@ class Controller extends Package
             $userCategory = $service->getByHandle('user')->getController();
             $userCategory->associateAttributeKeyType($type);
         }
-    }
-
-    public function on_start()
-    {
-        $this->registerAutoload();
-    }
-
-    protected function registerAutoload()
-    {
-        require $this->getPackagePath() . '/vendor/autoload.php';
     }
 }

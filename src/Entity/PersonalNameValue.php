@@ -3,9 +3,7 @@
 namespace Macareux\Package\PersonalNameAttribute\Entity;
 
 use Concrete\Core\Entity\Attribute\Value\Value\AbstractValue;
-use Concrete\Core\Localization\Localization;
 use Doctrine\ORM\Mapping as ORM;
-use Jsor\StringFormatter\NameFormatter;
 
 /**
  * @ORM\Entity
@@ -17,22 +15,38 @@ class PersonalNameValue extends AbstractValue
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $family_name;
+    protected $given_name;
 
     /**
      * @var string
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $given_name;
+    protected $family_name;
+
+    /**
+     * @var string
+     */
+    protected $format = '%1$s %2$s';
 
     public function __toString()
     {
-        $formatter = new NameFormatter(Localization::activeLocale());
+        return sprintf($this->format, $this->getGivenName(), $this->getFamilyName());
+    }
 
-        return $formatter->format([
-            'family_name' => $this->getFamilyName(),
-            'given_name' => $this->getGivenName(),
-        ]);
+    /**
+     * @return string
+     */
+    public function getGivenName()
+    {
+        return $this->given_name;
+    }
+
+    /**
+     * @param string $given_name
+     */
+    public function setGivenName($given_name)
+    {
+        $this->given_name = $given_name;
     }
 
     /**
@@ -54,16 +68,16 @@ class PersonalNameValue extends AbstractValue
     /**
      * @return string
      */
-    public function getGivenName()
+    public function getFormat()
     {
-        return $this->given_name;
+        return $this->format;
     }
 
     /**
-     * @param string $given_name
+     * @param string $format
      */
-    public function setGivenName($given_name)
+    public function setFormat($format)
     {
-        $this->given_name = $given_name;
+        $this->format = $format;
     }
 }

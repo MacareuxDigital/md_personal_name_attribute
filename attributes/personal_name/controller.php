@@ -145,7 +145,17 @@ class Controller extends AttributeController
 
     public function getDisplayValue()
     {
-        return (string) $this->getAttributeValue()->getValue();
+        /** @var PersonalNameValue $value */
+        $value = $this->getAttributeValue()->getValue();
+        if ($value) {
+            /** @var PersonalNameSettings $settings */
+            $settings = $this->getAttributeKeySettings();
+            if ($settings->getFirstName() === 'family_name') {
+                $value->setFormat('%2$s %1$s');
+            }
+        }
+
+        return (string) $value;
     }
 
     public function validateKey($data = false)
