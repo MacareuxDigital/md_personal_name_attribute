@@ -6,9 +6,13 @@ use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
+use Concrete\Core\Error\ErrorList\Error\Error;
+use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
+use Concrete\Core\Error\ErrorList\Field\AttributeField;
 use Concrete\Core\Form\Context\ContextInterface;
 use Concrete\Core\Utility\Service\Validation\Strings;
+use Concrete\Core\Validator\String\RegexValidator;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameSettings;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameValue;
 
@@ -40,17 +44,27 @@ class Controller extends AttributeController
     /**
      * @var string
      */
-    protected $akFamilyNameLabel;
-
-    /**
-     * @var string
-     */
     protected $akGivenNamePattern;
 
     /**
      * @var string
      */
+    protected $akGivenNameErrorMessage;
+
+    /**
+     * @var string
+     */
+    protected $akFamilyNameLabel;
+
+    /**
+     * @var string
+     */
     protected $akFamilyNamePattern;
+
+    /**
+     * @var string
+     */
+    protected $akFamilyNameErrorMessage;
 
     public function getIconFormatter()
     {
@@ -128,8 +142,36 @@ class Controller extends AttributeController
 
     public function validateForm($data)
     {
-        return isset($data['given_name']) && $data['given_name'] != ''
-            && isset($data['family_name']) && $data['family_name'] != '';
+        $ak = $this->getAttributeKey();
+        /** @var ErrorList $errorList */
+        $errorList = $this->app->make('helper/validation/error');
+
+        if (isset($data['given_name']) && $data['given_name'] != '' && isset($data['family_name']) && $data['family_name'] != '') {
+            /** @var PersonalNameSettings $settings */
+            $settings = $ak->getAttributeKeySettings();
+            $givenNamePattern = $settings->getGivenNamePattern();
+            if ($givenNamePattern) {
+                /** @var RegexValidator $validator */
+                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $givenNamePattern . '$/']);
+                if (!$validator->isValid($data['given_name'])) {
+                    $message = $settings->getGivenNameErrorMessage() ? $settings->getGivenNameErrorMessage() : t('Must match pattern.');
+                    $errorList->add($message, new Error(new AttributeField($ak)));
+                }
+            }
+            $familyNamePattern = $settings->getFamilyNamePattern();
+            if ($familyNamePattern) {
+                /** @var RegexValidator $validator */
+                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $familyNamePattern . '$/']);
+                if (!$validator->isValid($data['family_name'])) {
+                    $message = $settings->getFamilyNameErrorMessage() ? $settings->getFamilyNameErrorMessage() : t('Must match pattern.');
+                    $errorList->add($message, new Error(new AttributeField($ak)));
+                }
+            }
+        } else {
+            $errorList->add(new FieldNotPresentError(new AttributeField($ak)));
+        }
+
+        return $errorList;
     }
 
     public function getSearchIndexValue()
@@ -163,8 +205,10 @@ class Controller extends AttributeController
         $akFirstName = $data['akFirstName'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
         $akGivenNamePattern = $data['akGivenNamePattern'];
+        $akGivenNameErrorMessage = $data['akGivenNameErrorMessage'];
         $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akFamilyNamePattern = $data['akFamilyNamePattern'];
+        $akFamilyNameErrorMessage = $data['akFamilyNameErrorMessage'];
 
         $e = $this->app->make('error');
         /** @var Strings $strings */
@@ -182,12 +226,22 @@ class Controller extends AttributeController
             $e->add(t('You must specify a label for family name field.'));
         }
 
-        if (!empty($akGivenNamePattern) && !$strings->isValidRegex($akGivenNamePattern, false)) {
-            $e->add(t('Invalid regex pattern.'));
+        if (!empty($akGivenNamePattern)) {
+            if (!$strings->isValidRegex('/^' . $akGivenNamePattern . '$/')) {
+                $e->add(t('Invalid regex pattern for given name field.'));
+            }
+            if (empty($akGivenNameErrorMessage)) {
+                $e->add(t('You must specify an error message for given name field.'));
+            }
         }
 
-        if (!empty($akFamilyNamePattern) && !$strings->isValidRegex($akFamilyNamePattern, false)) {
-            $e->add(t('Invalid regex pattern.'));
+        if (!empty($akFamilyNamePattern)) {
+            if (!$strings->isValidRegex('/^' . $akFamilyNamePattern . '$/')) {
+                $e->add(t('Invalid regex pattern for family name field.'));
+            }
+            if (empty($akFamilyNameErrorMessage)) {
+                $e->add(t('You must specify an error message for family name field.'));
+            }
         }
 
         return $e;
@@ -214,14 +268,18 @@ class Controller extends AttributeController
         $akFirstName = $data['akFirstName'];
         $akGivenNameLabel = $data['akGivenNameLabel'];
         $akGivenNamePattern = $data['akGivenNamePattern'];
+        $akGivenNameErrorMessage = $data['akGivenNameErrorMessage'];
         $akFamilyNameLabel = $data['akFamilyNameLabel'];
         $akFamilyNamePattern = $data['akFamilyNamePattern'];
+        $akFamilyNameErrorMessage = $data['akFamilyNameErrorMessage'];
 
         $type->setFirstName($akFirstName);
         $type->setGivenNameLabel($akGivenNameLabel);
         $type->setGivenNamePattern($akGivenNamePattern);
+        $type->setGivenNameErrorMessage($akGivenNameErrorMessage);
         $type->setFamilyNameLabel($akFamilyNameLabel);
         $type->setFamilyNamePattern($akFamilyNamePattern);
+        $type->setFamilyNameErrorMessage($akFamilyNameErrorMessage);
 
         return $type;
     }
@@ -296,7 +354,7 @@ class Controller extends AttributeController
             }
         }
         if ($value !== null) {
-            /* @var PersonalNameValue $value */
+            // @var PersonalNameValue $value
             $value->setGivenName(trim(array_shift($textRepresentation)));
             $value->setFamilyName(trim(array_shift($textRepresentation)));
         }
@@ -316,12 +374,16 @@ class Controller extends AttributeController
         $this->akFirstName = $type->getFirstName();
         $this->akGivenNameLabel = $type->getGivenNameLabel();
         $this->akGivenNamePattern = $type->getGivenNamePattern();
+        $this->akGivenNameErrorMessage = $type->getGivenNameErrorMessage();
         $this->akFamilyNameLabel = $type->getFamilyNameLabel();
         $this->akFamilyNamePattern = $type->getFamilyNamePattern();
+        $this->akFamilyNameErrorMessage = $type->getFamilyNameErrorMessage();
         $this->set('akFirstName', $this->akFirstName);
         $this->set('akGivenNameLabel', $this->akGivenNameLabel);
         $this->set('akGivenNamePattern', $this->akGivenNamePattern);
+        $this->set('akGivenNameErrorMessage', $this->akGivenNameErrorMessage);
         $this->set('akFamilyNameLabel', $this->akFamilyNameLabel);
         $this->set('akFamilyNamePattern', $this->akFamilyNamePattern);
+        $this->set('akFamilyNameErrorMessage', $this->akFamilyNameErrorMessage);
     }
 }

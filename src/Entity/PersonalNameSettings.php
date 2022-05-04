@@ -33,6 +33,12 @@ class PersonalNameSettings extends Settings
      * @var string
      * @ORM\Column(type="string")
      */
+    protected $akGivenNameErrorMessage = '';
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
     protected $akFamilyNameLabel = '';
 
     /**
@@ -40,6 +46,12 @@ class PersonalNameSettings extends Settings
      * @ORM\Column(type="string")
      */
     protected $akFamilyNamePattern = '';
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $akFamilyNameErrorMessage = '';
 
     /**
      * @return string
@@ -92,6 +104,22 @@ class PersonalNameSettings extends Settings
     /**
      * @return string
      */
+    public function getGivenNameErrorMessage()
+    {
+        return $this->akGivenNameErrorMessage;
+    }
+
+    /**
+     * @param string $akGivenNameErrorMessage
+     */
+    public function setGivenNameErrorMessage(string $akGivenNameErrorMessage)
+    {
+        $this->akGivenNameErrorMessage = $akGivenNameErrorMessage;
+    }
+
+    /**
+     * @return string
+     */
     public function getFamilyNameLabel()
     {
         return $this->akFamilyNameLabel;
@@ -119,5 +147,21 @@ class PersonalNameSettings extends Settings
     public function setFamilyNamePattern($akFamilyNamePattern)
     {
         $this->akFamilyNamePattern = $akFamilyNamePattern;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamilyNameErrorMessage()
+    {
+        return $this->akFamilyNameErrorMessage;
+    }
+
+    /**
+     * @param string $akFamilyNameErrorMessage
+     */
+    public function setFamilyNameErrorMessage(string $akFamilyNameErrorMessage)
+    {
+        $this->akFamilyNameErrorMessage = $akFamilyNameErrorMessage;
     }
 }

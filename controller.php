@@ -9,8 +9,11 @@ use Concrete\Core\Package\Package;
 class Controller extends Package
 {
     protected $pkgHandle = 'md_personal_name_attribute';
+
     protected $appVersionRequired = '8.5.5';
+
     protected $pkgVersion = '0.9.1';
+
     protected $pkgAutoloaderRegistries = [
         'src' => '\Macareux\Package\PersonalNameAttribute',
     ];
