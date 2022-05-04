@@ -13,7 +13,7 @@ $akGivenNameErrorMessage = isset($akGivenNameErrorMessage) ? $akGivenNameErrorMe
 $akFamilyNameLabel = isset($akFamilyNameLabel) ? $akFamilyNameLabel : t('Family Name');
 $akFamilyNamePattern = isset($akFamilyNamePattern) ? $akFamilyNamePattern : '';
 $akFamilyNameErrorMessage = isset($akFamilyNameErrorMessage) ? $akFamilyNameErrorMessage : '';
-$akFirstName = isset($akFirstName) ? $akFirstName : 'family_name';
+$akFirstName = isset($akFirstName) ? $akFirstName : 'given_name';
 ?>
 <fieldset class="ccm-attribute ccm-attribute-personal-name">
     <legend><?=t('Personal Name Options')?></legend>
