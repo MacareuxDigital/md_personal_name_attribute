@@ -24,22 +24,22 @@ if (isset($akGivenNamePattern) && $akGivenNamePattern) {
 }
 ?>
 
-<div class="form-inline ccm-attribute-personal-name-composer-wrapper">
+<div class="row ccm-attribute-personal-name-composer-wrapper">
 
     <?php if ($akFirstName === 'family_name') { ?>
-    <div class="form-group ccm-attribute-personal-name-family-name">
-        <?= $form->label($this->field('family_name'), $family_name_label); ?>
-        <?= $form->text($this->field('family_name'), $family_name, $family_name_options); ?>
-    </div>
+        <div class="col-md-6 form-group ccm-attribute-personal-name-family-name">
+            <?= $form->label($this->field('family_name'), $family_name_label); ?>
+            <?= $form->text($this->field('family_name'), $family_name, $family_name_options); ?>
+        </div>
     <?php } ?>
 
-    <div class="form-group ccm-attribute-personal-name-given-name">
+    <div class="col-md-6 form-group ccm-attribute-personal-name-given-name">
         <?= $form->label($this->field('given_name'), $given_name_label); ?>
         <?= $form->text($this->field('given_name'), $given_name, $given_name_options); ?>
     </div>
 
     <?php if ($akFirstName !== 'family_name') { ?>
-        <div class="form-group ccm-attribute-personal-name-family-name">
+        <div class="col-md-6 form-group ccm-attribute-personal-name-family-name">
             <?= $form->label($this->field('family_name'), $family_name_label); ?>
             <?= $form->text($this->field('family_name'), $family_name, $family_name_options); ?>
         </div>
