@@ -6,6 +6,7 @@ use Concrete\Core\Attribute\Context\BasicFormContext;
 use Concrete\Core\Attribute\Controller as AttributeController;
 use Concrete\Core\Attribute\FontAwesomeIconFormatter;
 use Concrete\Core\Attribute\Form\Control\View\GroupedView;
+use Concrete\Core\Attribute\MulticolumnTextExportableAttributeInterface;
 use Concrete\Core\Error\ErrorList\Error\Error;
 use Concrete\Core\Error\ErrorList\Error\FieldNotPresentError;
 use Concrete\Core\Error\ErrorList\ErrorList;
@@ -16,7 +17,7 @@ use Concrete\Core\Validator\String\RegexValidator;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameSettings;
 use Macareux\Package\PersonalNameAttribute\Entity\PersonalNameValue;
 
-class Controller extends AttributeController
+class Controller extends AttributeController implements MulticolumnTextExportableAttributeInterface
 {
     public $helpers = ['form'];
 
@@ -318,8 +319,8 @@ class Controller extends AttributeController
     public function getAttributeTextRepresentationHeaders()
     {
         return [
-            'family_name',
             'given_name',
+            'family_name',
         ];
     }
 
