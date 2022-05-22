@@ -1,5 +1,5 @@
 # Release Notes
 
-## [v1.0 (, 2022)]
+## [v1.0 (May 22, 2022)]
 
 - Initial Release.
