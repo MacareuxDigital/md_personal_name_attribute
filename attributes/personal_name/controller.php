@@ -201,6 +201,11 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
         return (string) $value;
     }
 
+    public function getPlainTextValue()
+    {
+        return $this->getDisplayValue();
+    }
+
     public function validateKey($data = false)
     {
         $akFirstName = $data['akFirstName'];
