@@ -153,7 +153,7 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
             $givenNamePattern = $settings->getGivenNamePattern();
             if ($givenNamePattern) {
                 /** @var RegexValidator $validator */
-                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $givenNamePattern . '$/']);
+                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $givenNamePattern . '$/u']);
                 if (!$validator->isValid($data['given_name'])) {
                     $message = $settings->getGivenNameErrorMessage() ? $settings->getGivenNameErrorMessage() : t('Must match pattern.');
                     $errorList->add($message, new Error(new AttributeField($ak)));
@@ -162,7 +162,7 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
             $familyNamePattern = $settings->getFamilyNamePattern();
             if ($familyNamePattern) {
                 /** @var RegexValidator $validator */
-                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $familyNamePattern . '$/']);
+                $validator = $this->app->make(RegexValidator::class, ['pattern' => '/^' . $familyNamePattern . '$/u']);
                 if (!$validator->isValid($data['family_name'])) {
                     $message = $settings->getFamilyNameErrorMessage() ? $settings->getFamilyNameErrorMessage() : t('Must match pattern.');
                     $errorList->add($message, new Error(new AttributeField($ak)));
@@ -228,7 +228,7 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
         }
 
         if (!empty($akGivenNamePattern)) {
-            if (!$strings->isValidRegex('/^' . $akGivenNamePattern . '$/')) {
+            if (!$strings->isValidRegex('/^' . $akGivenNamePattern . '$/u')) {
                 $e->add(t('Invalid regex pattern for given name field.'));
             }
             if (empty($akGivenNameErrorMessage)) {
@@ -237,7 +237,7 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
         }
 
         if (!empty($akFamilyNamePattern)) {
-            if (!$strings->isValidRegex('/^' . $akFamilyNamePattern . '$/')) {
+            if (!$strings->isValidRegex('/^' . $akFamilyNamePattern . '$/u')) {
                 $e->add(t('Invalid regex pattern for family name field.'));
             }
             if (empty($akFamilyNameErrorMessage)) {
