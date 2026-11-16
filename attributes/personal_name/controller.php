@@ -188,6 +188,11 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
 
     public function getDisplayValue()
     {
+        return h($this->getPlainTextValue());
+    }
+
+    public function getPlainTextValue()
+    {
         /** @var PersonalNameValue $value */
         $value = $this->getAttributeValue()->getValue();
         if ($value) {
@@ -199,11 +204,6 @@ class Controller extends AttributeController implements MulticolumnTextExportabl
         }
 
         return (string) $value;
-    }
-
-    public function getPlainTextValue()
-    {
-        return $this->getDisplayValue();
     }
 
     public function validateKey($data = false)
